@@ -33,22 +33,22 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
 
         Inventory inv = commandSender.getServer().createInventory(null, 27, "Coinflip Menu | Page 1");
 
-        // Verification tile for Anti Dupe (remember vulcan ac vurnerability)
-        ItemStack verificationTile = createVerificationTile();
-        inv.setItem(0, verificationTile);
+
 
         // Fill the chest with gray glass panes (not the verification tile though)
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < 27; i++) {
             ItemStack grayGlassPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta meta = grayGlassPane.getItemMeta();
             if (meta != null) {
-                // Use the enum to get the NamespacedKey
-                NamespacedKey key = PDTKeys.COINFLIP_GUI;
-                meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, " ");
-                grayGlassPane.setItemMeta(meta);
+                meta.setItemName(" ");
             }
+            grayGlassPane.setItemMeta(meta);
             inv.setItem(i, grayGlassPane);
         }
+
+        // Verification tile for Anti Dupe (remember vulcan ac vurnerability)
+        ItemStack verificationTile = createVerificationTile();
+        inv.setItem(0, verificationTile);
 
         // Set other items
 
@@ -69,7 +69,7 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         clockMeta.itemName(miniMessage.deserialize("<green>Refresh"));
         clock.setItemMeta(clockMeta);
 
-        inv.setItem(23, clock);
+        inv.setItem(22, clock);
 
         //Not Avail item
         ItemStack notAvail = new ItemStack(Material.BARRIER);
@@ -78,7 +78,7 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         notAvail.setItemMeta(notAvailMeta);
 
         //Automatically not avail on go back arrow
-        inv.setItem(22, notAvail);
+        inv.setItem(21, notAvail);
 
         //Arrow Item Point ->
         ItemStack NextPage = new ItemStack(Material.ARROW);
@@ -87,10 +87,10 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         NextPage.setItemMeta(arrowMeta);
 
 
-        if (BroKits_Insilicon_Test.flips.toArray().length < 16) {
-            inv.setItem(24, NextPage);
+        if (BroKits_Insilicon_Test.flips.toArray().length > 15) {
+            inv.setItem(23, NextPage);
         } else {
-            inv.setItem(24, notAvail);
+            inv.setItem(23, notAvail);
         }
 
 
@@ -110,8 +110,9 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         ItemStack verificationTile = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta = verificationTile.getItemMeta();
 
+
         if (meta != null) {
-            // Use the enum to get the NamespacedKey
+            meta.setItemName("V");
             NamespacedKey key = PDTKeys.COINFLIP_GUI;
             meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, " ");
             verificationTile.setItemMeta(meta);
