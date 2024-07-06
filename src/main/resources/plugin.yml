@@ -1,0 +1,7 @@
+name: BroKits-Insilicon-Test
+version: '${version}'
+main: dev.insilicon.brokitsinsilicontest.BroKits_Insilicon_Test
+api-version: '1.20'
+load: STARTUP
+authors: [insilicon / ModdedKid]
+description: Developer test for insilicon
