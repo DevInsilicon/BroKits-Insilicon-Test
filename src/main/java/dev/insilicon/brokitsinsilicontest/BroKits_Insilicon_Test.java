@@ -27,7 +27,13 @@ public final class BroKits_Insilicon_Test extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new dev.insilicon.brokitsinsilicontest.listeners.GUIListener(), this);
 
+        //register commands
+        getCommand("coinflip").setExecutor(new dev.insilicon.brokitsinsilicontest.commands.CoinflipCMD());
+        getCommand("coinflip").setTabCompleter(new dev.insilicon.brokitsinsilicontest.commands.CoinflipCMD());
+
         getLogger().info("Coinflip init'ed");
+
+
 
     }
 

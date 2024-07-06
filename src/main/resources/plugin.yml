@@ -5,3 +5,8 @@ api-version: '1.20'
 load: STARTUP
 authors: [insilicon / ModdedKid]
 description: Developer test for insilicon
+commands:
+  coinflip:
+    description: Coinflip command
+    usage: /coinflip
+    aliases: [cf]

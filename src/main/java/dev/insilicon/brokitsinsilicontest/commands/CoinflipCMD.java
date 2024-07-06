@@ -98,7 +98,7 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
 
 
 
-        return false;
+        return true;
     }
 
     @Override
