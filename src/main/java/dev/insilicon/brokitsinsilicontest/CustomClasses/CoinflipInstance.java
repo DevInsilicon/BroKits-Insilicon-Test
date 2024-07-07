@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,19 @@ public class CoinflipInstance {
 
     private Player player1;
     private Player player2;
+    private String uid;
 
     private double betAmount;
 
     private Economy economy;
 
-    public CoinflipInstance(Player player1, Player player2, double betAmount) {
+    public CoinflipInstance(Player player1, double betAmount) {
         this.player1 = player1;
         this.player2 = player2;
         this.betAmount = betAmount;
+
+        //Generate uid
+        this.uid = PlainTextComponentSerializer.plainText().serialize(Component.text(player1.getName() + System.currentTimeMillis()));
 
          economy = BroKits_Insilicon_Test.getEconomy();
 
@@ -96,47 +101,50 @@ public class CoinflipInstance {
                 continue;
             }
 
-            player.sendMessage(miniMessage.deserialize("<green>---------------------------------------"));
-            player.sendMessage(miniMessage.deserialize("<green><bold>                COINFLIP"));
-            player.sendMessage(miniMessage.deserialize("<green>                <bold>WINNER      <red><bold>LOSER"));
-
             Player loser = winner == 1 ? player2 : player1;
             Player winnerplr = winner == 1 ? player1 : player2;
 
-            String spaces = "                    ";
-            String centeredUsernames = String.format("<green><bold>%-16s<red><bold>%s", winnerplr.getName(), loser.getName());
-            player.sendMessage(miniMessage.deserialize("<green>" + spaces + centeredUsernames));
-
+            player.sendMessage(miniMessage.deserialize("<green>---------------------------------------"));
+            player.sendMessage(miniMessage.deserialize("<green><bold>                COINFLIP"));
+            player.sendMessage(miniMessage.deserialize("<green><bold>WINNER: <reset><green>"+winnerplr.getName()+"      <red><bold>LOSER: <reset><red>"+loser.getName()));
             player.sendMessage(miniMessage.deserialize("<green>---------------------------------------"));
 
 
         }
     }
 
-    public ItemStack createCoinflipItem() {
+    public void refund() {
+        economy.depositPlayer(player1, betAmount);
+    }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public ItemStack createCoinflipItem() {
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        //init
+        // Init
         ItemStack cfItem = new ItemStack(Material.GOLD_INGOT);
         ItemMeta meta = cfItem.getItemMeta();
 
-        //Lore
-
-        Component loreLine1Comp = miniMessage.deserialize("<gold>Click to join coinflip!");
-
+        // Lore
         Component loreLine2Comp = miniMessage.deserialize("<green>Bet: <yellow>$" + betAmount);
 
+        List<Component> lore = meta.lore();
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+        lore.add(loreLine2Comp);
+        meta.lore(lore);
 
-        meta.lore().add(loreLine1Comp);
-        meta.lore().add(loreLine2Comp);
+        // Extras
+        meta.displayName(miniMessage.deserialize("<gold>" + player1.getName() + "'s Coinflip"));
 
-        //Extras
-        meta.itemName(miniMessage.deserialize("<gold>"+player1.getName()+"'s Coinflip"));
+        meta.getPersistentDataContainer().set(PDTKeys.COINFLIP_UID, PersistentDataType.STRING, uid);
 
 
         cfItem.setItemMeta(meta);
         return cfItem;
-
     }
 }

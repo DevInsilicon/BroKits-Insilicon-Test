@@ -31,6 +31,9 @@ public final class BroKits_Insilicon_Test extends JavaPlugin {
         getCommand("coinflip").setExecutor(new dev.insilicon.brokitsinsilicontest.commands.CoinflipCMD());
         getCommand("coinflip").setTabCompleter(new dev.insilicon.brokitsinsilicontest.commands.CoinflipCMD());
 
+        getCommand("fillpage").setExecutor(new dev.insilicon.brokitsinsilicontest.commands.FillPage());
+
+
         getLogger().info("Coinflip init'ed");
 
 
@@ -41,7 +44,30 @@ public final class BroKits_Insilicon_Test extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
 
+        refundAllCoinFlips();
         getLogger().info("Coinflip disabled");
+    }
+
+    public void refundAllCoinFlips() {
+        for (CoinflipInstance flip : flips) {
+            flip.refund();
+        }
+    }
+
+    public static List<CoinflipInstance> getFlips() {
+        return flips;
+    }
+
+    public static void setFlips(List<CoinflipInstance> flips) {
+        BroKits_Insilicon_Test.flips = flips;
+    }
+
+    public static void addFlip(CoinflipInstance flip) {
+        flips.add(flip);
+    }
+
+    public static void removeFlip(CoinflipInstance flip) {
+        flips.remove(flip);
     }
 
     private boolean setupEconomy() {

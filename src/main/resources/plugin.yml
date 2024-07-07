@@ -10,3 +10,11 @@ commands:
     description: Coinflip command
     usage: /coinflip
     aliases: [cf]
+  fillPage:
+    description: DEVELOPER COMMAND ONLY fills page to test arrow controls
+    usage: /fillPage
+    aliases: [ fp ]
+
+
+
+

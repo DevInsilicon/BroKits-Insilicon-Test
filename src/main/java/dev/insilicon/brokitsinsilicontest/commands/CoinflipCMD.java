@@ -3,6 +3,7 @@ package dev.insilicon.brokitsinsilicontest.commands;
 import dev.insilicon.brokitsinsilicontest.BroKits_Insilicon_Test;
 import dev.insilicon.brokitsinsilicontest.CustomClasses.CoinflipInstance;
 import dev.insilicon.brokitsinsilicontest.CustomClasses.PDTKeys;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -19,6 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CoinflipCMD implements CommandExecutor, TabCompleter {
@@ -31,12 +33,12 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
 
-        Inventory inv = commandSender.getServer().createInventory(null, 27, "Coinflip Menu | Page 1");
+        Inventory inv = commandSender.getServer().createInventory(null, 36, "Coinflip Menu | Page  1");
 
 
 
-        // Fill the chest with gray glass panes (not the verification tile though)
-        for (int i = 1; i < 27; i++) {
+        // Fill the chest with gray glass panes
+        for (int i = 0; i < 36; i++) {
             ItemStack grayGlassPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta meta = grayGlassPane.getItemMeta();
             if (meta != null) {
@@ -48,9 +50,9 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
 
         // Verification tile for Anti Dupe (remember vulcan ac vurnerability)
         ItemStack verificationTile = createVerificationTile();
-        inv.setItem(0, verificationTile);
+        inv.setItem(35, verificationTile);
 
-        // Set other items
+        //LAYOUT
 
         // OXXXXXXXX 9
         // XXXXXXXXX 18
@@ -69,7 +71,7 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         clockMeta.itemName(miniMessage.deserialize("<green>Refresh"));
         clock.setItemMeta(clockMeta);
 
-        inv.setItem(22, clock);
+        inv.setItem(31, clock);
 
         //Not Avail item
         ItemStack notAvail = new ItemStack(Material.BARRIER);
@@ -78,7 +80,7 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         notAvail.setItemMeta(notAvailMeta);
 
         //Automatically not avail on go back arrow
-        inv.setItem(21, notAvail);
+        inv.setItem(30, notAvail);
 
         //Arrow Item Point ->
         ItemStack NextPage = new ItemStack(Material.ARROW);
@@ -86,11 +88,39 @@ public class CoinflipCMD implements CommandExecutor, TabCompleter {
         arrowMeta.itemName(miniMessage.deserialize("<green>Next Page"));
         NextPage.setItemMeta(arrowMeta);
 
+        //Create Create Coinflip block
+        ItemStack createCF = new ItemStack(Material.GOLD_BLOCK);
+        ItemMeta createCFMeta = createCF.getItemMeta();
+        createCFMeta.itemName(miniMessage.deserialize("<gold>Create Coinflip"));
+        createCF.setItemMeta(createCFMeta);
 
-        if (BroKits_Insilicon_Test.flips.toArray().length > 15) {
-            inv.setItem(23, NextPage);
+        inv.setItem(27, createCF);
+
+
+        //Create cf items and stop at item 26
+        for (int i = 0; i < BroKits_Insilicon_Test.getFlips().size(); i++) {
+            if (i == 26) {
+                break;
+            }
+            CoinflipInstance cf = BroKits_Insilicon_Test.getFlips().get(i);
+            ItemStack cfItem = cf.createCoinflipItem();
+            ItemMeta meta = cfItem.getItemMeta();
+
+            if (cf.getPlayer1().equals(player)) {
+                List<Component> lore = meta.lore() != null ? new ArrayList<>(meta.lore()) : new ArrayList<>();
+                lore.add(MiniMessage.miniMessage().deserialize("<red>Click to remove & refund"));
+                meta.lore(lore);
+            }
+            cfItem.setItemMeta(meta);
+            inv.setItem(i, cfItem);
+        }
+
+
+
+        if (BroKits_Insilicon_Test.getFlips().toArray().length > 16) {
+            inv.setItem(32, NextPage);
         } else {
-            inv.setItem(23, notAvail);
+            inv.setItem(32, notAvail);
         }
 
 
