@@ -88,6 +88,9 @@ public class CoinflipInstance {
             throw new IllegalStateException("Winner is not 1 or 2 | Val: " + winner + " Class: CoinflipInstance");
         }
 
+        //Remove coinflip from list
+        BroKits_Insilicon_Test.removeFlip(this);
+
 
 
     }

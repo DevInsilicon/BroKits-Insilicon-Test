@@ -304,8 +304,8 @@ public class GUIListener implements Listener {
 
                     BroKits_Insilicon_Test.getFlips().remove(cf);
                     player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Coinflip removed. Your money of $" + cf.getBetAmount() + " was refunded."));
-                } else {
 
+                } else {
 
                     if (economy != null) {
                         double playerBalance = economy.getBalance(player);
@@ -333,7 +333,6 @@ public class GUIListener implements Listener {
                 int maxPages = (int) Math.ceil(tobedisplayed.size() / 27.0);
 
                 Inventory inv = player.getServer().createInventory(null, 36, "Coinflip Menu | Page  " + currentPage);
-
 
                 for (int i = 0; i < 35; i++) {
                     ItemStack grayGlassPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -407,6 +406,15 @@ public class GUIListener implements Listener {
                 } else {
                     inv.setItem(30, notAvail);
                 }
+
+                // Replace the clicked item with a gray stained glass pane
+                ItemStack grayGlassPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+                ItemMeta graymeta = grayGlassPane.getItemMeta();
+                if (graymeta != null) {
+                    graymeta.itemName(MiniMessage.miniMessage().deserialize(" "));
+                }
+                grayGlassPane.setItemMeta(graymeta);
+                event.getInventory().setItem(event.getSlot(), grayGlassPane);
 
                 player.closeInventory();
                 player.openInventory(inv);
